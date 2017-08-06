@@ -1,0 +1,7 @@
+logging:
+  level: INFO
+  loggers:
+    com.alma.prototypes: DEBUG
+
+server:
+  rootPath: /api
