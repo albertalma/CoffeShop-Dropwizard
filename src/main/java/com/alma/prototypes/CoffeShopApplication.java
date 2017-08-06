@@ -1,11 +1,14 @@
 package com.alma.prototypes;
 
-import com.alma.prototypes.resources.CoffeShopResource;
+import com.alma.prototypes.resources.CoffeeShopResource;
+import com.mongodb.MongoClient;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.mongodb.morphia.Morphia;
 
+import java.net.UnknownHostException;
 
 public class CoffeShopApplication extends Application<CoffeShopConfiguration> {
 
@@ -27,7 +30,11 @@ public class CoffeShopApplication extends Application<CoffeShopConfiguration> {
     @Override
     public void run(final CoffeShopConfiguration configuration,
                     final Environment environment) {
-        environment.jersey().register(new CoffeShopResource());
+        try {
+            environment.jersey().register(new CoffeeShopResource(new Morphia().createDatastore(new MongoClient("localhost", 32768), "CoffeDB")));
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 }

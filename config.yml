@@ -4,4 +4,4 @@ logging:
     com.alma.prototypes: DEBUG
 
 server:
-  rootPath: /api
+  rootPath: /api/*
