@@ -17,8 +17,14 @@ coffeApp.controller('OrderController', function ($scope, $resource) {
     ];
 
     $scope.messages = [];
-
     $scope.sizes = ['Small','Medium','Large'];
+
+    $scope.availableOptions = [];
+
+    var ExtrasResource = $resource('api/extras');
+    ExtrasResource.query('', function(extras) {
+        $scope.availableOptions = extras;
+    });
 
     $scope.orderCoffee = function() {
         $scope.drink.coffeeShopId = 1;
@@ -30,5 +36,12 @@ coffeApp.controller('OrderController', function ($scope, $resource) {
 
     $scope.closeAlert = function (index) {
         $scope.messages.splice(index,1);
+    }
+    
+    $scope.addOption = function () {
+        if ($scope.drink.selectedOptions === undefined) {
+            $scope.drink.selectedOptions = [];
+        }
+        $scope.drink.selectedOptions.push($scope.newOption);
     }
 })
