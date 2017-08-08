@@ -1,15 +1,17 @@
 package com.alma.prototypes;
 
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
+
 import com.alma.prototypes.lifecycle.MongoClientManager;
 import com.alma.prototypes.resources.CoffeeShopResource;
+import com.alma.prototypes.resources.ExtraOptionsResource;
 import com.mongodb.MongoClient;
+
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.mongodb.morphia.Morphia;
-
-import java.net.UnknownHostException;
 
 public class CoffeShopApplication extends Application<CoffeShopConfiguration> {
 
@@ -29,16 +31,13 @@ public class CoffeShopApplication extends Application<CoffeShopConfiguration> {
     }
 
     @Override
-    public void run(final CoffeShopConfiguration configuration,
-                    final Environment environment) {
-        try {
-            MongoClient mongoClient = new MongoClient("localhost", 32769);
-            environment.jersey().register(new CoffeeShopResource(new Morphia().createDatastore(mongoClient, "CoffeDB")));
-            MongoClientManager mongoClientManager = new MongoClientManager(mongoClient);
-            environment.lifecycle().manage(mongoClientManager);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public void run(final CoffeShopConfiguration configuration, final Environment environment) {
+        MongoClient mongoClient = new MongoClient("localhost", 32769);
+        Datastore datastore = new Morphia().createDatastore(mongoClient, "CoffeDB");
+        environment.jersey().register(new CoffeeShopResource(datastore));
+        environment.jersey().register(new ExtraOptionsResource(datastore));
+        MongoClientManager mongoClientManager = new MongoClientManager(mongoClient);
+        environment.lifecycle().manage(mongoClientManager);
     }
 
 }
