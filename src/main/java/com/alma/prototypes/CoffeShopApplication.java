@@ -24,7 +24,7 @@ public class CoffeShopApplication extends Application<CoffeShopConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<CoffeShopConfiguration> bootstrap) {
-        AssetsBundle bundle = new AssetsBundle("/assets", "/");
+        AssetsBundle bundle = new AssetsBundle("/html", "/");
         bootstrap.addBundle(bundle);
     }
 
@@ -32,7 +32,7 @@ public class CoffeShopApplication extends Application<CoffeShopConfiguration> {
     public void run(final CoffeShopConfiguration configuration,
                     final Environment environment) {
         try {
-            MongoClient mongoClient = new MongoClient("localhost", 32768);
+            MongoClient mongoClient = new MongoClient("localhost", 32769);
             environment.jersey().register(new CoffeeShopResource(new Morphia().createDatastore(mongoClient, "CoffeDB")));
             MongoClientManager mongoClientManager = new MongoClientManager(mongoClient);
             environment.lifecycle().manage(mongoClientManager);
